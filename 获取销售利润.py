@@ -41,6 +41,7 @@ def get_market(id, q=None):
     return qp
 
 def get_sc_market(id, iq=None):
+    print("market start")
     global last_req_time
     while time.time() - last_req_time <= 60:
         time.sleep(1)
@@ -51,6 +52,7 @@ def get_sc_market(id, iq=None):
         print(resp.status_code)
         print(resp.text)
         return {}
+    print(resp.status_code)
     resource = resp.json()
     if resource is None:
         return {}
@@ -68,10 +70,12 @@ def get_sc_market(id, iq=None):
         r = rs[0]
         price = r.get("price")
         qp[q] = price
+    print("market end")
     return dict(sorted(qp.items()))
 
 
 def culculate_income(qp, input_param):
+    print("culculate start")
     sell_speeds = input_param["sell_speed"]
     sell_price = input_param["sell_price"]
     income = {}
@@ -90,6 +94,7 @@ def culculate_income(qp, input_param):
             "24hour_cost": round(p * sell_speed * 24, 3),
             "24hour_income": round(income_per_unit * sell_speed * 24, 3),
         }
+    print("culculate end")
     return income
 
 def get_data_and_save(input_params, file_name):
